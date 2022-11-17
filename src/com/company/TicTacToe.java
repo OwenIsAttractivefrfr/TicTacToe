@@ -10,7 +10,14 @@ public class TicTacToe extends JFrame
     JPanel gamePanel = new JPanel();
     JTextField[] boxTextField = new JTextField[9];
     JLabel[] gridLabel = new JLabel[4];
-
+    JPanel playersPanel = new JPanel();
+    ButtonGroup playersButtonGroup = new ButtonGroup();
+    JRadioButton twoPlayerRadioButton = new JRadioButton();
+    JRadioButton onePlayerRadioButton = new JRadioButton();
+    ButtonGroup firstButtonGroup = new ButtonGroup();
+    JRadioButton playerFirst = new JRadioButton();
+    JRadioButton computerFirst = new JRadioButton();
+    JPanel firstPanel = new JPanel();
 
 
     public TicTacToe() throws HeadlessException
@@ -86,8 +93,8 @@ public class TicTacToe extends JFrame
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.insets = new Insets(5,0,5,0);
         gamePanel.add(gridLabel[0], gridBagConstraints);
-
-
+//
+//
         gridLabel[1] = new JLabel();
         gridLabel[1].setPreferredSize(new Dimension(280,10));
         gridLabel[1].setOpaque(true);
@@ -98,30 +105,98 @@ public class TicTacToe extends JFrame
         gridBagConstraints.gridwidth = 5;
         gridBagConstraints.insets = new Insets(5,0,5,0);
         gamePanel.add(gridLabel[1], gridBagConstraints);
-//
-//
-//        gridLabel[2] = new JLabel();
-//        gridLabel[2].setPreferredSize(new Dimension(10,280));
-//        gridLabel[2].setOpaque(true);
-//        gridLabel[2].setBackground(Color.BLUE);
-//        gridBagConstraints = new GridBagConstraints();
-//        gridBagConstraints.gridx = 1;
-//        gridBagConstraints.gridy = 0;
-//        gridBagConstraints.gridwidth = 5;
-//        gridBagConstraints.insets = new Insets(0,5,0,5);
-//        gamePanel.add(gridLabel[2], gridBagConstraints);
-//
-//        gridLabel[3] = new JLabel();
-//        gridLabel[3].setPreferredSize(new Dimension(10,280));
-//        gridLabel[3].setOpaque(true);
-//        gridLabel[3].setBackground(Color.BLUE);
-//        gridBagConstraints = new GridBagConstraints();
-//        gridBagConstraints.gridx = 3;
-//        gridBagConstraints.gridy = 0;
-//        gridBagConstraints.gridwidth = 5;
-//        gridBagConstraints.insets = new Insets(0,5,0,5);
-//        gamePanel.add(gridLabel[3], gridBagConstraints);
-//
+        System.out.println( gridLabel[1]);
+
+
+        gridLabel[2] = new JLabel();
+        gridLabel[2].setPreferredSize(new Dimension(10,280));
+        gridLabel[2].setOpaque(true);
+        gridLabel[2].setBackground(Color.BLUE);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx =1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.insets = new Insets(0,5,0,5);
+        gamePanel.add(gridLabel[2], gridBagConstraints);
+
+        gridLabel[3] = new JLabel();
+        gridLabel[3].setPreferredSize(new Dimension(10,280));
+        gridLabel[3].setOpaque(true);
+        gridLabel[3].setBackground(Color.BLUE);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.gridheight = 5;
+        gridBagConstraints.insets = new Insets(0,5,0,5);
+        gamePanel.add(gridLabel[3], gridBagConstraints);
+
+        playersPanel.setPreferredSize(new Dimension(160,75));
+        playersPanel.setBackground(Color.WHITE);
+        playersPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+        playersPanel.setLayout(new GridBagLayout());
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.insets = new Insets(5,10,5,10);
+        getContentPane().add(playersPanel, gridBagConstraints);
+
+        onePlayerRadioButton.setText("One Player");
+        onePlayerRadioButton.setBackground(Color.WHITE);
+        playersButtonGroup.add(onePlayerRadioButton);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        playersPanel.add(onePlayerRadioButton, gridBagConstraints);
+        onePlayerRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                onePlayerRadioButtonAction(e);
+            }
+        });
+
+        twoPlayerRadioButton.setText("Two Player");
+        twoPlayerRadioButton.setBackground(Color.WHITE);
+        playersButtonGroup.add(twoPlayerRadioButton);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        playersPanel.add(twoPlayerRadioButton, gridBagConstraints);
+        twoPlayerRadioButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                twoPlayerRadioButtonAction(e);
+            }
+        });
+
+        firstPanel.setPreferredSize(new Dimension(160,75));
+        firstPanel.setBackground(Color.WHITE);
+        firstPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+        firstPanel.setLayout(new GridBagLayout());
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 1;
+        getContentPane().add(firstPanel, gridBagConstraints);
+
+        playerFirst.setText("You first");
+        playerFirst.setBackground(Color.PINK);
+        playerFirst.setSelected(true);
+        firstButtonGroup.add(playerFirst);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        firstPanel.add(playerFirst, gridBagConstraints);
+
+        computerFirst.setText("Computer First");
+        computerFirst.setBackground(Color.RED);
+        firstButtonGroup.add(computerFirst);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        firstPanel.add(computerFirst, gridBagConstraints);
 
 
         pack();
@@ -135,6 +210,16 @@ public class TicTacToe extends JFrame
     }
 
     public void boxTextFieldmousePressed(MouseEvent mouseEvent)
+    {
+
+    }
+
+    public void onePlayerRadioButtonAction(ActionEvent actionEvent)
+    {
+
+    }
+
+    public void twoPlayerRadioButtonAction(ActionEvent actionEvent)
     {
 
     }
