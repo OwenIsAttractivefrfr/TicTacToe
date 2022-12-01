@@ -18,6 +18,16 @@ public class TicTacToe extends JFrame
     JRadioButton playerFirst = new JRadioButton();
     JRadioButton computerFirst = new JRadioButton();
     JPanel firstPanel = new JPanel();
+    JPanel computerPanel = new JPanel();
+    ButtonGroup computerButtonGroup = new ButtonGroup();
+    JRadioButton randomRadioButton = new JRadioButton();
+    JRadioButton smartRadioButton = new JRadioButton();
+    JButton startStopButton = new JButton();
+    JButton exitButton = new JButton();
+    JPanel buttonsPanel = new JPanel();
+    boolean xturn;
+    boolean canClick = false;
+    int numberClicks;
 
 
     public TicTacToe() throws HeadlessException
@@ -199,9 +209,86 @@ public class TicTacToe extends JFrame
         firstPanel.add(computerFirst, gridBagConstraints);
 
 
+        computerPanel.setPreferredSize(new Dimension(160,75));
+        computerPanel.setBackground(Color.BLUE);
+        computerPanel.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
+        computerPanel.setLayout(new GridBagLayout());
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.insets = new Insets(5, 10,5,10);
+        getContentPane().add(computerPanel, gridBagConstraints);
+
+
+        randomRadioButton.setText("Random Computer");
+        randomRadioButton.setBackground(Color.MAGENTA);
+        randomRadioButton.setSelected(true);
+        computerButtonGroup.add(randomRadioButton);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        computerPanel.add(randomRadioButton, gridBagConstraints);
+
+
+        smartRadioButton.setText("Smart Computer");
+        smartRadioButton.setBackground(Color.LIGHT_GRAY);
+        computerButtonGroup.add(smartRadioButton);
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.anchor = GridBagConstraints.WEST;
+        computerPanel.add(smartRadioButton, gridBagConstraints);
+
+
+        buttonsPanel.setPreferredSize(new Dimension(160,70));
+        buttonsPanel.setBackground(Color.GREEN);
+        buttonsPanel.setLayout(new GridBagLayout());
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridy = 3;
+        getContentPane().add(buttonsPanel, gridBagConstraints);
+
+
+        startStopButton.setText("Start Game");
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
+        buttonsPanel.add(startStopButton, gridBagConstraints);
+
+
+        startStopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                startStopButtonPressed(e);
+            }
+        });
+
+        exitButton.setText("Exit Game");
+        gridBagConstraints = new GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy= 1;
+        gridBagConstraints.insets = new Insets(10,0,0,0);
+        buttonsPanel.add(exitButton, gridBagConstraints);
+        exitButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                exitButtonPressed(e);
+            }
+        });
+
+
         pack();
         Dimension screenSize= Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((int)(0.5 * (screenSize.width - getWidth())), (int)(0.5 * (screenSize.height - getHeight())), getWidth(), getHeight());
+
+
+        messageTextField.setText("Game Stopped");
+        playerFirst.setEnabled(false);
+        computerFirst.setEnabled(false);
+        randomRadioButton.setEnabled(false);
+        smartRadioButton.setEnabled(false);
+
     }
 
     public void exitForm(WindowEvent windowEvent)
@@ -222,5 +309,47 @@ public class TicTacToe extends JFrame
     public void twoPlayerRadioButtonAction(ActionEvent actionEvent)
     {
 
+    }
+
+    public void startStopButtonPressed(ActionEvent actionEvent)
+    {
+        if(startStopButton.getText().equals("Start Game"))
+        {
+            startStopButton.setText("Stop Game");
+            twoPlayerRadioButton.setEnabled(false);
+            onePlayerRadioButton.setEnabled(false);
+            playerFirst.setEnabled(false);
+            computerFirst.setEnabled(false);
+            randomRadioButton.setEnabled(false);
+            smartRadioButton.setEnabled(false);
+            exitButton.setEnabled(false);
+            xturn = true;
+            messageTextField.setText("X's turn");
+            for (int i = 0; i < 9; i++) {
+                boxTextField[i].setText("");
+            }
+            canClick = true;
+            numberClicks = 0;
+        }
+        else
+        {
+            startStopButton.setText("Start Game");
+            messageTextField.setText("Game Stop");
+            twoPlayerRadioButton.setEnabled(true);
+            onePlayerRadioButton.setEnabled(true);
+            if(onePlayerRadioButton.isSelected())
+            {
+                playerFirst.setEnabled(true);
+                computerFirst.setEnabled(true);
+                randomRadioButton.setEnabled(true);
+                smartRadioButton.setEnabled(true);
+            }
+            exitButton.setEnabled(true);
+            canClick = false;
+        }
+    }
+    public void exitButtonPressed(ActionEvent actionEvent)
+    {
+        System.exit(0);
     }
 }
