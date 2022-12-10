@@ -25,6 +25,8 @@ public class TicTacToe extends JFrame
     JButton startStopButton = new JButton();
     JButton exitButton = new JButton();
     JPanel buttonsPanel = new JPanel();
+    String[] possibleWins = new String[8];
+    boolean gameOver;
     boolean xturn;
     boolean canClick = false;
     int numberClicks;
@@ -289,6 +291,16 @@ public class TicTacToe extends JFrame
         randomRadioButton.setEnabled(false);
         smartRadioButton.setEnabled(false);
 
+        possibleWins[0] = "012";
+        possibleWins[1] = "345";
+        possibleWins[2] = "678";
+        possibleWins[3] = "036";
+        possibleWins[4] = "147";
+        possibleWins[5] = "258";
+        possibleWins[6] = "048";
+        possibleWins[7] = "246";
+
+
     }
 
     public void exitForm(WindowEvent windowEvent)
@@ -298,7 +310,19 @@ public class TicTacToe extends JFrame
 
     public void boxTextFieldmousePressed(MouseEvent mouseEvent)
     {
-
+        if(canClick)
+        {
+            int i;
+            Point point = mouseEvent.getComponent().getLocation();
+            for(i = 0; i < 9; i++)
+            {
+                if(point.x == boxTextField[i].getX() && point.y == boxTextField[i].getY())
+                {
+                    break;
+                }
+            }
+            markClickBox(i);
+        }
     }
 
     public void onePlayerRadioButtonAction(ActionEvent actionEvent)
@@ -327,14 +351,19 @@ public class TicTacToe extends JFrame
             messageTextField.setText("X's turn");
             for (int i = 0; i < 9; i++) {
                 boxTextField[i].setText("");
+                boxTextField[i].setBackground(Color.WHITE);
             }
             canClick = true;
             numberClicks = 0;
+            gameOver = false;
         }
         else
         {
             startStopButton.setText("Start Game");
-            messageTextField.setText("Game Stop");
+            if(!gameOver)
+            {
+                messageTextField.setText("Game Stop");
+            }
             twoPlayerRadioButton.setEnabled(true);
             onePlayerRadioButton.setEnabled(true);
             if(onePlayerRadioButton.isSelected())
@@ -352,4 +381,66 @@ public class TicTacToe extends JFrame
     {
         System.exit(0);
     }
+
+    public void markClickBox(int i)
+    {
+        String whoWon = "";
+        if(!boxTextField[i].getText().equals(""))
+        {
+            return;
+        }
+        numberClicks++;
+        if (xturn)
+        {
+            boxTextField[i].setText("X");
+            xturn = false;
+            messageTextField.setText("O's turn");
+        }
+        else
+        {
+            boxTextField[i].setText("O");
+            xturn = true;
+            messageTextField.setText("X's turn");
+        }
+        whoWon = checkForWin();
+        if(!whoWon.equals(""))
+        {
+            messageTextField.setText(whoWon + " Wins");
+            gameOver = true;
+            startStopButton.doClick();
+            return;
+        }
+        else if(numberClicks == 9)
+        {
+            messageTextField.setText("It is a draw");
+            gameOver = true;
+            startStopButton.doClick();
+            return;
+        }
+    }
+
+    public String checkForWin()
+    {
+        String winner = "";
+        int[] boxNumber = new int[3];
+        String[] mark = new String[3];
+        for(int i = 0; i < 8; i ++)
+        {
+            for(int j = 0; j < 3; j++)
+            {
+                boxNumber[j] = Integer.valueOf(String.valueOf(possibleWins[i].charAt(j))).intValue();
+                mark[j] = boxTextField[boxNumber[j]].getText();
+            }
+            if(mark[0].equals(mark[1]) && mark[0].equals(mark[2]) && mark[1].equals(mark[2]) && !mark.equals(""))
+            {
+                winner = mark[0];
+                for(int j = 0; j < 3; j++)
+                {
+                    boxTextField[boxNumber[j]].setBackground(Color.YELLOW);
+                }
+            }
+        }
+        return winner;
+    }
+
 }
