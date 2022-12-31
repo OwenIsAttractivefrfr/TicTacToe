@@ -2,6 +2,7 @@ package com.company;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Random;
 
 
 public class TicTacToe extends JFrame
@@ -26,6 +27,7 @@ public class TicTacToe extends JFrame
     JButton exitButton = new JButton();
     JPanel buttonsPanel = new JPanel();
     String[] possibleWins = new String[8];
+    Random random = new Random();
     boolean gameOver;
     boolean xturn;
     boolean canClick = false;
@@ -327,11 +329,98 @@ public class TicTacToe extends JFrame
 
     public void onePlayerRadioButtonAction(ActionEvent actionEvent)
     {
-
+        computerFirst.setEnabled(true);
+        playerFirst.setEnabled(true);
+        randomRadioButton.setEnabled(true);
+        smartRadioButton.setEnabled(true);
     }
 
     public void twoPlayerRadioButtonAction(ActionEvent actionEvent)
     {
+        computerFirst.setEnabled(false);
+        playerFirst.setEnabled(false);
+        randomRadioButton.setEnabled(false);
+        smartRadioButton.setEnabled(false);
+    }
+
+    public void computerTurn()
+    {
+        int selectedBox;
+        int i, n;
+        int j, k;
+        String computerMark, playerMark, marktoFind;
+        int[] boxNumber = new int[3];
+        String[] mark = new String[3];
+        int[] bestMoves  = {4,0,2,6,8,1,3,5,7};
+        int emptyBox;
+        if(randomRadioButton.isSelected())
+        {
+            n = random.nextInt(9-numberClicks) + 1;
+            i = 0;
+            for(selectedBox = 0 ; selectedBox < 9; selectedBox++)
+            {
+                if(boxTextField[selectedBox].getText().equals(""))
+                    i++;
+                if(i == n)
+                    break;
+            }
+            markClickBox(selectedBox);
+        }
+        else
+        {
+            if(computerFirst.isSelected())
+            {
+                computerMark = "X";
+                playerMark = "O";
+            }
+            else
+            {
+                computerMark = "O";
+                playerMark = "X";
+            }
+            for(k = 1; k<= 2; k++)
+            {
+                if(k == 1)
+                {
+                    marktoFind = computerMark;
+                }
+                else
+                {
+                    marktoFind = playerMark;
+                }
+                for(i = 0; i < 8; i++)
+                {
+                    n = 0;
+                    emptyBox = 0;
+                    for(j = 0; j < 3; j++)
+                    {
+                        boxNumber[j] = Integer.valueOf(String.valueOf(possibleWins[i].charAt(j))).intValue();
+                        mark[j] = boxTextField[boxNumber[j]].getText();
+                        if(mark[j].equals(marktoFind))
+                        {
+                            n++;
+                        }
+                        else if(mark[j].equals(""))
+                        {
+                            emptyBox = boxNumber[j];
+                        }
+                    }
+                    if(n == 2 && emptyBox != 0)
+                    {
+                        markClickBox(emptyBox);
+                        return;
+                    }
+                }
+                for(i = 0; i < 9; i++)
+                {
+                    if(boxTextField[bestMoves[i]].getText().equals(""))
+                    {
+                        markClickBox(bestMoves[i]);
+                        return;
+                    }
+                }
+            }
+        }
 
     }
 
@@ -356,6 +445,8 @@ public class TicTacToe extends JFrame
             canClick = true;
             numberClicks = 0;
             gameOver = false;
+            if(computerFirst.isSelected())
+                computerTurn();
         }
         else
         {
@@ -417,6 +508,13 @@ public class TicTacToe extends JFrame
             startStopButton.doClick();
             return;
         }
+        if(onePlayerRadioButton.isSelected())
+        {
+            if((xturn && computerFirst.isSelected()) || (!xturn && playerFirst.isSelected()))
+            {
+                computerTurn();
+            }
+        }
     }
 
     public String checkForWin()
@@ -424,14 +522,14 @@ public class TicTacToe extends JFrame
         String winner = "";
         int[] boxNumber = new int[3];
         String[] mark = new String[3];
-        for(int i = 0; i < 8; i ++)
+        for(int i = 0; i < 8; i++)
         {
             for(int j = 0; j < 3; j++)
             {
                 boxNumber[j] = Integer.valueOf(String.valueOf(possibleWins[i].charAt(j))).intValue();
                 mark[j] = boxTextField[boxNumber[j]].getText();
             }
-            if(mark[0].equals(mark[1]) && mark[0].equals(mark[2]) && mark[1].equals(mark[2]) && !mark.equals(""))
+            if(mark[0].equals(mark[1]) && mark[0].equals(mark[2]) && mark[1].equals(mark[2]) && !mark[0].equals(""))
             {
                 winner = mark[0];
                 for(int j = 0; j < 3; j++)
