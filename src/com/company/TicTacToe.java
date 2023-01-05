@@ -2,7 +2,9 @@ package com.company;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.net.URL;
 import java.util.Random;
+import java.applet.*;
 
 
 public class TicTacToe extends JFrame
@@ -28,6 +30,9 @@ public class TicTacToe extends JFrame
     JPanel buttonsPanel = new JPanel();
     String[] possibleWins = new String[8];
     Random random = new Random();
+    AudioClip winSound;
+    AudioClip loseSound;
+    AudioClip drawSound;
     boolean gameOver;
     boolean xturn;
     boolean canClick = false;
@@ -287,6 +292,19 @@ public class TicTacToe extends JFrame
         setBounds((int)(0.5 * (screenSize.width - getWidth())), (int)(0.5 * (screenSize.height - getHeight())), getWidth(), getHeight());
 
 
+        try
+        {
+            loseSound = Applet.newAudioClip(new URL("file:" + "./src/com/company/Sound/Loss.wav"));
+            winSound = Applet.newAudioClip(new URL("file:" + "./src/com/company/Sound/WinTikTakToe.wav"));
+            drawSound = Applet.newAudioClip(new URL("file:" + "./src/com/company/Sound/Draw.wav"));
+        }
+        catch(Exception e)
+        {
+            System.out.println("error loading sound file");
+        }
+
+
+
         messageTextField.setText("Game Stopped");
         playerFirst.setEnabled(false);
         computerFirst.setEnabled(false);
@@ -378,39 +396,30 @@ public class TicTacToe extends JFrame
                 computerMark = "O";
                 playerMark = "X";
             }
-            for(k = 1; k<= 2; k++)
-            {
-                if(k == 1)
-                {
+            for(k = 1; k<= 2; k++) {
+                if (k == 1) {
                     marktoFind = computerMark;
-                }
-                else
-                {
+                } else {
                     marktoFind = playerMark;
                 }
-                for(i = 0; i < 8; i++)
-                {
+                for (i = 0; i < 8; i++) {
                     n = 0;
                     emptyBox = 0;
-                    for(j = 0; j < 3; j++)
-                    {
+                    for (j = 0; j < 3; j++) {
                         boxNumber[j] = Integer.valueOf(String.valueOf(possibleWins[i].charAt(j))).intValue();
                         mark[j] = boxTextField[boxNumber[j]].getText();
-                        if(mark[j].equals(marktoFind))
-                        {
+                        if (mark[j].equals(marktoFind)) {
                             n++;
-                        }
-                        else if(mark[j].equals(""))
-                        {
+                        } else if (mark[j].equals("")) {
                             emptyBox = boxNumber[j];
                         }
                     }
-                    if(n == 2 && emptyBox != 0)
-                    {
+                    if (n == 2 && emptyBox != 0) {
                         markClickBox(emptyBox);
                         return;
                     }
                 }
+            }
                 for(i = 0; i < 9; i++)
                 {
                     if(boxTextField[bestMoves[i]].getText().equals(""))
@@ -419,7 +428,6 @@ public class TicTacToe extends JFrame
                         return;
                     }
                 }
-            }
         }
 
     }
@@ -496,6 +504,22 @@ public class TicTacToe extends JFrame
         whoWon = checkForWin();
         if(!whoWon.equals(""))
         {
+            if(computerFirst.isSelected() && whoWon.equals("X"))
+            {
+                loseSound.play();
+            }
+            else if(computerFirst.isSelected() && whoWon.equals("O"));
+            {
+                winSound.play();
+            }
+            if(playerFirst.isSelected() && whoWon.equals("X"))
+            {
+                winSound.play();
+            }
+            else if(playerFirst.isSelected() && whoWon.equals("O"))
+            {
+                loseSound.play();
+            }
             messageTextField.setText(whoWon + " Wins");
             gameOver = true;
             startStopButton.doClick();
@@ -506,6 +530,7 @@ public class TicTacToe extends JFrame
             messageTextField.setText("It is a draw");
             gameOver = true;
             startStopButton.doClick();
+            drawSound.play();
             return;
         }
         if(onePlayerRadioButton.isSelected())
